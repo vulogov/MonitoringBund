@@ -18,7 +18,6 @@ func Submit() {
 	InitEtcdAgent("submit")
 	UpdateLocalConfigFromEtcd()
 	InitNatsAgent()
-	InitNewRelicAgent()
 	log.Debugf("[ MBUND ] bund.Submit(%v) is reached", ApplicationId)
 	script := ""
 	if *conf.SScript == "--" {

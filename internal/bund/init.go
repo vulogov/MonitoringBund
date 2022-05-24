@@ -30,5 +30,4 @@ func Init() {
 	jobrunner.Start(*conf.JPool, *conf.JCon)
 	log.Debugf("[ MBUND ] Job runner started")
 	stdlib.StoreArgs()
-	CheckNewRelic()
 }

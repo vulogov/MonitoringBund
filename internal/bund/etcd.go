@@ -43,7 +43,7 @@ func InitEtcdAgent(otype string) {
 
 func EtcdSetItem(key string, value string) {
 	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
-	_, err := Etcd.Put(ctx, fmt.Sprintf("NRBUND/%s/%s", *conf.NRAccount, key), value)
+	_, err := Etcd.Put(ctx, fmt.Sprintf("MBUND/%s/%s", *conf.Name, key), value)
 	if err != nil {
 		log.Errorf("[ ETCD ] %v", err)
 		signal.ExitRequest()
@@ -53,7 +53,7 @@ func EtcdSetItem(key string, value string) {
 
 func EtcdGetItems()  *map[string]string {
 	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
-	value, err := Etcd.Get(ctx, fmt.Sprintf("NRBUND/%s/", *conf.NRAccount), clientv3.WithPrefix())
+	value, err := Etcd.Get(ctx, fmt.Sprintf("MBUND/%s/", *conf.Name), clientv3.WithPrefix())
 	if err != nil {
 		log.Errorf("[ ETCD ] %v", err)
 		signal.ExitRequest()
@@ -73,10 +73,6 @@ func UpdateLocalConfigFromEtcd() {
 	*conf.Id = (*etcd_cfg)["ID"]
 	SetApplicationId(ApplicattionType)
 	log.Debugf("Application ID is %v", *conf.Id)
-	log.Debugf("NR Account is %v", *conf.NRAccount)
-	*conf.NRKey = (*etcd_cfg)["NEWRELIC_API_KEY"]
-	*conf.NRLicenseKey = (*etcd_cfg)["NEWRELIC_LICENSE_KEY"]
-	*conf.NRIngestKey = (*etcd_cfg)["NEWRELIC_INGEST_KEY"]
 	*conf.Gnats = (*etcd_cfg)["gnats"]
 	log.Debugf("NATS is %v", *conf.Gnats)
 }
@@ -89,11 +85,6 @@ func UpdateConfigToEtcd() {
 		EtcdSetItem("etcd", addr)
 		log.Debugf("Update GNATS endpoints with %s", *conf.Gnats)
 		EtcdSetItem("gnats", *conf.Gnats)
-		log.Debug("Upload NR keys")
-		EtcdSetItem("NEWRELIC_ACCOUNT", *conf.NRAccount)
-		EtcdSetItem("NEWRELIC_API_KEY", *conf.NRKey)
-		EtcdSetItem("NEWRELIC_INGEST_KEY", *conf.NRIngestKey)
-		EtcdSetItem("NEWRELIC_LICENSE_KEY", *conf.NRLicenseKey)
 		EtcdSetItem("ID", *conf.Id)
 	}
 }

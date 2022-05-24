@@ -1,7 +1,6 @@
 package bund
 
 import (
-	"time"
 	"github.com/pieterclaerhout/go-log"
 	"github.com/vulogov/monitoringbund/internal/signal"
 	"github.com/vulogov/monitoringbund/internal/banner"
@@ -13,8 +12,6 @@ func Fin() {
 	CloseNatsAgent()
 	CloseEtcdAgent()
 	log.Debug("Wait while NR application is shut down")
-	NRapp.Shutdown(60 * time.Second)
-	log.Debug("NR Application is down")
 	log.Infof("[ MBUND ] %s is down", ApplicationId)
 	signal.ExitRequest()
 }

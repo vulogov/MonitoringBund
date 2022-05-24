@@ -20,20 +20,14 @@ func (s TheScript) Run() {
 		log.Warn("Request to submit job received but agitator not in SYNC state. Request ignored.")
 		return
 	}
-	txn := NRapp.StartTransaction(fmt.Sprintf("[%v]%v", s.Name, s.Uri))
-	defer txn.End()
 	log.Debugf("[ MBUND ] sending %s", s.Name)
-	segment := txn.StartSegment(fmt.Sprintf("[%v] Read %v", s.Name, s.Uri))
 	script, err := tc.ReadFile(s.Uri)
-	segment.End()
 	if err != nil {
 		log.Errorf("[ MBUND ] %v", err)
-		txn.NoticeError(err)
 		return
 	}
 	if len(script) == 0 {
 		log.Errorf("[ MBUND ] script can not be a zero length")
-		txn.NoticeError(err)
 		return
 	}
 	pkt, err := MakeScript(s.Uri, "agitator", []byte(script), s.Args, s.Res)
@@ -42,10 +36,7 @@ func (s TheScript) Run() {
 
 
 func AgitatorScheduleConfig() {
-	txn := NRapp.StartTransaction(fmt.Sprintf("%s loading schedule configuration", ApplicationId))
-	defer txn.End()
 	for _, n := range(*conf.AConf) {
-		segment := txn.StartSegment(fmt.Sprintf("%s loading %s", ApplicationId, n))
 		cfg := HJsonLoadConfig(n)
 		if cfg != nil {
 			if jobs, ok := (*cfg)["jobs"]; ok {
@@ -71,7 +62,6 @@ func AgitatorScheduleConfig() {
 				}
 			}
 		}
-		segment.End()
 	}
 }
 
@@ -87,7 +77,6 @@ func Agitator() {
 		UpdateLocalConfigFromEtcd()
 	}
 	InitNatsAgent()
-	InitNewRelicAgent()
 	AgitatorScheduleConfig()
 	jobrunner.Schedule("@every 5s", NATSSync{})
 	Loop()

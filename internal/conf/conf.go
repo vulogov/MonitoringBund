@@ -39,18 +39,14 @@ func FileList(s kingpin.Settings) (target *[]string) {
 var (
 	seed    = time.Now().UTC().UnixNano()
 	App     = kingpin.New("NRBUND", fmt.Sprintf("[ MBUND ] Language that is Functional and Stack-based: %v", BVersion))
-	Name   	= App.Flag("name", "Application name.").Required().String()
-	Id      = App.Flag("id", "Application name.").Default(uuid.New().String()).String()
+	Name   	= App.Flag("name", "Define cluster name").Required().String()
+	Id      = App.Flag("id", "Unique application ID").Default(uuid.New().String()).String()
 	EvtDst	= App.Flag("event", "Destination for New Relic events").Default("BundApplicationEvent").String()
 	Debug   = App.Flag("debug", "Enable debug mode.").Default("false").Bool()
 	CDebug  = App.Flag("core-debug", "Enable core debug mode.").Default("false").Bool()
 	Color   = App.Flag("color", "--color : Enable colors on terminal --no-color : Disable colors .").Default("true").Bool()
 	VBanner = App.Flag("banner", "Display [ MBUND ] banner .").Default("false").Bool()
 	Timeout = App.Flag("timeout", "Timeout for common NRBUND operations").Default("5s").Duration()
-	NRAccount 		= App.Flag("nraccount", "New Relic account.").Envar("NEWRELIC_ACCOUNT").String()
-	NRKey 				= App.Flag("nrkey", "New Relic API key.").Envar("NEWRELIC_API_KEY").String()
-	NRLicenseKey 	= App.Flag("nrlicensekey", "New Relic API key.").Envar("NEWRELIC_LICENSE_KEY").String()
-	NRIngestKey 	= App.Flag("nringestkey", "New Relic License key.").Envar("NEWRELIC_INGEST_KEY").String()
 	Etcd				= App.Flag("etcd", "ETCD endpoint location").Default("127.0.0.1:2379").Strings()
 	Gnats   		= App.Flag("gnats", "GNATS endpoint location").Default("0.0.0.0:4222").String()
 	ShowResult 	= App.Flag("displayresult", "Display result of [ MBUND ] expression evaluation").Default("false").Bool()
@@ -81,7 +77,8 @@ var (
 
 	Agent   		= App.Command("agent", "Run [ MBUND ] Agent")
 
-	Config   		= App.Command("config", "Send configuration to ETCD")
+	Config   		= App.Command("config", "Upload configuration to ETCD")
+	SConf       = Submit.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
 
 	Submit   		= App.Command("submit", "Schedule NRBUND script to be executed")
 	SArgs       = Submit.Flag("arg", "Pass positional argument to the script").Strings()
