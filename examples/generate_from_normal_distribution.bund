@@ -1,0 +1,9 @@
+/* This code will generate some numbers from random.Distribution.Normal */
+
+local [
+  let ['mu' 2.0 ]      /* Mean of Normal Distribution */
+  let ['sigma' 5 ]     /* Standard Deviation of Normal distribution */
+  let ['maxsize' 64]   /* We do not want more than 64 numbers. By default, it is unlimited */
+]
+
+random.Distribution.Normal generate graph println

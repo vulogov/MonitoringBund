@@ -1,0 +1,6 @@
+/* This is basic example of log module use */
+
+log.Debug["This is debug message"] ,
+log.Info["This is info message and 42 is %v" 42] ,
+log.Warning["This is warning message and 42 is again %v" 42] ,
+log.Error["This is error message and 42 once more %v and pi=%v" 42 3.14] ,

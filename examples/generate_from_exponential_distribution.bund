@@ -1,0 +1,8 @@
+/* This code will generate some numbers from random.Distribution.Normal */
+
+local [
+  let ['rate' 0.1 ]      /* Rate of Distribution */
+  let ['maxsize' 64]     /* We do not want more than 64 numbers. By default, it is unlimited */
+]
+
+random.Distribution.Exponential generate graph println
