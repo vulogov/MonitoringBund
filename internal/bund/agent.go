@@ -26,6 +26,9 @@ func Agent() {
 	InitEtcdAgent("agent")
 	UpdateLocalConfigFromEtcd()
 	InitNatsAgent()
+	if ! WaitSync() {
+		return
+	}
 	log.Debugf("[ MBUND ] bund.Agent(%v) is reached", ApplicationId)
 	NatsRecv(NRBundAgent)
 	Loop()

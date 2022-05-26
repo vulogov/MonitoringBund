@@ -29,6 +29,9 @@ func Take() {
 	InitEtcdAgent("take")
 	UpdateLocalConfigFromEtcd()
 	InitNatsAgent()
+	if ! WaitSync() {
+		return
+	}
 	log.Debugf("[ MBUND ] bund.Take(%v) is reached", ApplicationId)
 	NatsRecv(NRBundExecuteScript)
 	Loop()

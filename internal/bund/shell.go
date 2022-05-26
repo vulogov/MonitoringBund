@@ -21,6 +21,9 @@ var (
 
 func Shell() {
 	Init()
+	InitEtcdAgent("shell")
+	UpdateLocalConfigFromEtcd()
+	InitNatsAgent()
 	banner.PrintBanner(fmt.Sprintf("[ MBUND %v ]", conf.EVersion))
 	log.Info("For exit, type: .exit")
 	log.Debug("[ MBUND ] bund.Shell() is reached")

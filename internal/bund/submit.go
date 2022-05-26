@@ -44,6 +44,9 @@ func Submit() {
 			return
 	  }
 	}
+	if ! WaitSync() {
+		return
+	}
 	pkt, err := MakeScript(*conf.SScript, "submit", []byte(script), *conf.SArgs, *res)
 	if err != nil {
 		log.Errorf("[ MBUND ] %v", err)

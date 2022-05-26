@@ -3,10 +3,12 @@ package bund
 import (
 	"os"
 	"fmt"
+	"time"
 	"github.com/nats-io/nats.go"
 	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/signal"
 	"github.com/pieterclaerhout/go-log"
+	"github.com/bamzi/jobrunner"
 )
 
 var Nats *nats.Conn
@@ -25,13 +27,24 @@ func SysQueueHandler(m *nats.Msg) {
 		log.Error("Invalid packet received")
 	}
 	if IfSTOP(msg) {
-		log.Infof("STOP(%v) message received", msg.PktId)
+		log.Infof("STOP(%v) message received. Wait for Cluster to exit", msg.PktId)
+		time.Sleep(*conf.Timeout)
+		return
 	}
 	if IfSYNC(msg) {
 		if ! HadSync {
-			HadSync = true
-			log.Infof("SYNC(%v) message triggered SYNC state for %v", msg.PktId, ApplicationId)
+			if msg.ApplicationId() == ApplicationId {
+				log.Debugf("SYNC(%v) message from itself is not triggered SYNC state for %v", msg.PktId, ApplicationId)
+			} else {
+				HadSync = true
+				log.Infof("SYNC(%v) message triggered SYNC state for %v", msg.ApplicationId(), ApplicationId)
+			}
 		}
+		return
+	}
+	if IfMSG(msg) {
+		log.Info(string(msg.Value))
+		return
 	}
 }
 
@@ -69,6 +82,7 @@ func InitNatsAgent() {
 	log.Debugf("Log Queue name: %v", LogQueueName)
 	log.Debugf("Trace Queue name: %v", TraceQueueName)
 	NatsRecvSys(SysQueueHandler)
+	jobrunner.Schedule("@every 5s", NATSSync{})
 }
 
 func NatsSend(data []byte) {

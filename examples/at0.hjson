@@ -1,0 +1,12 @@
+{
+  jobs: [
+    {
+      name: "send 42"
+      schedule: "@every 5s"
+      args: [
+        42
+      ]
+      uri: "./examples/at0.bund"
+    }
+  ]
+}

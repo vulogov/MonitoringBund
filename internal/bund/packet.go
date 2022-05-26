@@ -1,6 +1,7 @@
 package bund
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/vmihailenco/msgpack"
 	"github.com/pieterclaerhout/go-log"
@@ -19,6 +20,10 @@ type NRBundPacket struct {
 	Args      []string
 	Res       map[string]interface{}
 	Value     []byte
+}
+
+func (msg *NRBundPacket) ApplicationId() string {
+	return fmt.Sprintf("%v:%v:%v", msg.Id, msg.OrigName, msg.OrgRole)
 }
 
 func NewBundPacket(uri string, orole string, pktclass string, pktkey string, args []string, value []byte, ret map[string]interface{}) *NRBundPacket {
@@ -64,6 +69,13 @@ func IfSTOP(msg *NRBundPacket) bool {
 	return false
 }
 
+func IfMSG(msg *NRBundPacket) bool {
+	if msg.PktClass == "SYS" && msg.PktKey == "MSG" {
+		return true
+	}
+	return false
+}
+
 func IfSYNC(msg *NRBundPacket) bool {
 	if msg.PktClass == "SYS" && msg.PktKey == "SYNC" {
 		return true
@@ -77,6 +89,10 @@ func MakeSync(orole string) ([]byte, error) {
 
 func MakeStop(orole string) ([]byte, error) {
 	return Marshal("", orole, "SYS", "STOP", nil, nil, nil)
+}
+
+func MakeMsg(msg string) ([]byte, error) {
+	return Marshal("", ApplicationType, "SYS", "MSG", nil, []byte(msg), nil)
 }
 
 func MakeScript(uri string, orole string, script []byte, args []string, res map[string]interface{}) ([]byte, error) {

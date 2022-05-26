@@ -78,6 +78,5 @@ func Agitator() {
 	}
 	InitNatsAgent()
 	AgitatorScheduleConfig()
-	jobrunner.Schedule("@every 5s", NATSSync{})
 	Loop()
 }

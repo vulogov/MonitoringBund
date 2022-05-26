@@ -20,6 +20,9 @@ func Watch() {
 	InitEtcdAgent("watch")
 	UpdateLocalConfigFromEtcd()
 	InitNatsAgent()
+	if ! WaitSync() {
+		return
+	}
 	log.Debugf("[ MBUND ] bund.Watch(%v) is reached", ApplicationId)
 	NatsRecv(WatchDisplay)
 	Loop()

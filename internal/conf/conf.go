@@ -74,7 +74,7 @@ var (
 
 	Agitator   	= App.Command("agitator", "Run [ MBUND ] Agitator")
 	UploadConf  = App.Flag("updateconf", "Update etcd configuration from local Agitator configuration").Default("false").Bool()
-	AConf 			= Agitator.Flag("conf", "Configuration file for Agitator scheduler.").Required().Strings()
+	AConf 			= Agitator.Flag("conf", "Configuration file for Agitator scheduler.").Strings()
 
 	Agent   		= App.Command("agent", "Run [ MBUND ] Agent")
 

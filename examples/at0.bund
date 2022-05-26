@@ -1,0 +1,2 @@
+/* This simple code will take what's passed as argument #0 and store/print it to the stack */
+#0 println
