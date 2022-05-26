@@ -50,7 +50,9 @@ func Config() {
 		log.Debugf("[ CONF ] Processing %v", n)
 		RunFile(core, n)
 	}
-	UpdateConfigToEtcd()
+	if *conf.CUpdate {
+		UpdateConfigToEtcd()
+	}
 	if *conf.CShow {
 		DisplayEtcdConfig()
 	}

@@ -79,6 +79,7 @@ var (
 
 	Config   		= App.Command("config", "Upload configuration to ETCD")
 	SConf       = Config.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
+	CUpdate 		= Config.Flag("update", "Update basic application info").Default("false").Bool()
 	CShow 			= Config.Flag("show", "Display configuration stored in ETCD").Default("false").Bool()
 
 	Submit   		= App.Command("submit", "Schedule NRBUND script to be executed")
