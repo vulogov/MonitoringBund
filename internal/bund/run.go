@@ -20,15 +20,6 @@ func RunFile(core *stdlib.BUNDEnv, name string) {
 func Run() {
 	Init()
 	log.Debug("[ MBUND ] bund.Run() is reached")
-	if *conf.CDebug {
-		log.Info("BUND core debug is on")
-		tc.SetVariable("tc.Debuglevel", "debug")
-		log.Infof("[ MBUND ] core version: %v", tc.VERSION)
-	} else {
-		log.Debug("BUND core debug is off")
-		tc.SetVariable("tc.Debuglevel", "info")
-		log.Debugf("[ MBUND ] core version: %v", tc.VERSION)
-	}
 	core := stdlib.InitBUND()
 	for _, f := range *conf.Scripts {
 		RunFile(core, f)

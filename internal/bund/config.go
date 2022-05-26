@@ -57,4 +57,5 @@ func Config() {
 		DisplayEtcdConfig()
 	}
 	UpdateLocalConfigFromEtcd()
+	InitNatsAgent()
 }

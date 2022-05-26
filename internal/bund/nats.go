@@ -12,7 +12,12 @@ import (
 var Nats *nats.Conn
 var QueueName string
 var SysQueueName string
+var EvtQueueName string
+var MetricQueueName string
+var LogQueueName string
+var TraceQueueName string
 var HadSync bool
+var NatsCluster string
 
 func SysQueueHandler(m *nats.Msg) {
 	msg := UnMarshal(m.Data)
@@ -33,9 +38,14 @@ func SysQueueHandler(m *nats.Msg) {
 func InitNatsAgent() {
 	var err error
 
-	log.Debugf("Connecting to NATS")
+	log.Debug("Configuring NATS cluster config")
+	NatsCluster = fmt.Sprintf("%v ", *conf.Gnats)
+	for _, c := range *conf.GnatsC {
+		NatsCluster += fmt.Sprintf(", %v", c)
+	}
+	log.Debugf("Connecting to NATS: %v", NatsCluster)
 	Nats, err = nats.Connect(
-		*conf.Gnats,
+		NatsCluster,
 		nats.Name(ApplicationId),
 		nats.ReconnectWait(*conf.Timeout),
 		nats.PingInterval(*conf.Timeout),
@@ -46,10 +56,18 @@ func InitNatsAgent() {
 		signal.ExitRequest()
 		os.Exit(10)
 	}
-	QueueName = fmt.Sprintf("%s:%s", *conf.Id, *conf.Name)
-	SysQueueName = fmt.Sprintf("%s:%s:sys", *conf.Id, *conf.Name)
+	QueueName 		= fmt.Sprintf("%s:%s", *conf.Id, *conf.Name)
+	SysQueueName 	= fmt.Sprintf("%s:%s:sys", *conf.Id, *conf.Name)
+	EvtQueueName 	= fmt.Sprintf("%s:%s:evt", *conf.Id, *conf.Name)
+	MetricQueueName 	= fmt.Sprintf("%s:%s:metric", *conf.Id, *conf.Name)
+	LogQueueName 	= fmt.Sprintf("%s:%s:log", *conf.Id, *conf.Name)
+	TraceQueueName 	= fmt.Sprintf("%s:%s:trace", *conf.Id, *conf.Name)
 	log.Debugf("Queue name: %v", QueueName)
 	log.Debugf("SysQueue name: %v", SysQueueName)
+	log.Debugf("Metric Queue name: %v", MetricQueueName)
+	log.Debugf("Event Queue name: %v", EvtQueueName)
+	log.Debugf("Log Queue name: %v", LogQueueName)
+	log.Debugf("Trace Queue name: %v", TraceQueueName)
 	NatsRecvSys(SysQueueHandler)
 }
 

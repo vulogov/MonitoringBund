@@ -49,6 +49,7 @@ var (
 	Timeout = App.Flag("timeout", "Timeout for common NRBUND operations").Default("5s").Duration()
 	Etcd				= App.Flag("etcd", "ETCD endpoint location").Default("127.0.0.1:2379").Strings()
 	Gnats   		= App.Flag("gnats", "GNATS endpoint location").Default("0.0.0.0:4222").String()
+	GnatsC  		= App.Flag("nats-cluster", "GNATS cluster addresses").Strings()
 	ShowResult 	= App.Flag("displayresult", "Display result of [ MBUND ] expression evaluation").Default("false").Bool()
 	JPool   = App.Flag("jobpool", "Pool size for job runner").Default("500").Int()
 	JCon   	= App.Flag("jobconcurrency", "Concurrency for job runner").Default("1").Int()
@@ -78,6 +79,7 @@ var (
 	Agent   		= App.Command("agent", "Run [ MBUND ] Agent")
 
 	Config   		= App.Command("config", "Upload configuration to ETCD")
+	CNatsLocal 	= Config.Flag("nats-always-local", "Do not propagate NATS address").Default("false").Bool()
 	SConf       = Config.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
 	CUpdate 		= Config.Flag("update", "Update basic application info").Default("false").Bool()
 	CShow 			= Config.Flag("show", "Display configuration stored in ETCD").Default("false").Bool()

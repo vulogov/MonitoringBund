@@ -151,12 +151,16 @@ func UpdateLocalConfigFromEtcd() {
 	*conf.Id = (*etcd_cfg)["ID"]
 	SetApplicationId(ApplicationType)
 	log.Debugf("Application ID is %v", *conf.Id)
-	*conf.Gnats = (*etcd_cfg)["gnats"]
+	if ! *conf.CNatsLocal {
+		*conf.Gnats = (*etcd_cfg)["gnats"]
+	}
 	log.Debugf("NATS is %v", *conf.Gnats)
 	EtcdGetConfItems()
-	if gnats, ok := Conf.Load("NATS"); ok {
-		log.Debugf("Set NATS server address from CONF/NATS %v", string(gnats.([]byte)))
-		*conf.Gnats = string(gnats.([]byte))
+	if ! *conf.CNatsLocal {
+		if gnats, ok := Conf.Load("NATS"); ok {
+			log.Debugf("Set NATS server address from CONF/NATS %v", string(gnats.([]byte)))
+			*conf.Gnats = string(gnats.([]byte))
+		}
 	}
 }
 
@@ -167,7 +171,9 @@ func UpdateConfigToEtcd() {
 		log.Debugf("Update ETCD endpoints with %s", addr)
 		EtcdSetItem("etcd", addr)
 		log.Debugf("Update GNATS endpoints with %s", *conf.Gnats)
-		EtcdSetItem("gnats", *conf.Gnats)
+		if ! *conf.CNatsLocal {
+			EtcdSetItem("gnats", *conf.Gnats)
+		}
 		EtcdSetItem("ID", *conf.Id)
 		log.Debugf("Updating CONF cache")
 		Conf.Range(func (key, value interface{}) bool {

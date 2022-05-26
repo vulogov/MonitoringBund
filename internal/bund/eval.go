@@ -44,15 +44,6 @@ func EvalDisplayResult(core *stdlib.BUNDEnv) {
 }
 
 func BundEvalExpression(code string) {
-	if *conf.CDebug {
-		log.Info("BUND core debug is on")
-		tc.SetVariable("tc.Debuglevel", "debug")
-		log.Infof("[ MBUND ] core version: %v", tc.VERSION)
-	} else {
-		log.Debug("BUND core debug is off")
-		tc.SetVariable("tc.Debuglevel", "info")
-		log.Debugf("[ MBUND ] core version: %v", tc.VERSION)
-	}
 	core := stdlib.InitBUND()
 	core.Eval(code)
 	EvalDisplayResult(core)

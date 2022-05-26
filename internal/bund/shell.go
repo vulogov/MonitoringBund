@@ -6,7 +6,6 @@ import (
 	"github.com/lrita/cmap"
 	"github.com/peterh/liner"
 	"github.com/pieterclaerhout/go-log"
-	tc "github.com/vulogov/ThreadComputation"
 	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/banner"
 	"github.com/vulogov/monitoringbund/internal/stdlib"
@@ -37,15 +36,6 @@ func Shell() {
 		}
 		return
 	})
-	if *conf.CDebug {
-		log.Info("BUND core debug is on")
-		tc.SetVariable("tc.Debuglevel", "debug")
-		log.Infof("[ MBUND ] core version: %v", tc.VERSION)
-	} else {
-		log.Debug("BUND core debug is off")
-		tc.SetVariable("tc.Debuglevel", "info")
-		log.Debugf("[ MBUND ] core version: %v", tc.VERSION)
-	}
 
 	core := stdlib.InitBUND()
 

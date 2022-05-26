@@ -7,6 +7,7 @@ import (
 	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/stdlib"
 	tlog "github.com/vulogov/monitoringbund/internal/log"
+	tc "github.com/vulogov/ThreadComputation"
 	"github.com/vulogov/monitoringbund/internal/signal"
 )
 
@@ -30,4 +31,18 @@ func Init() {
 	jobrunner.Start(*conf.JPool, *conf.JCon)
 	log.Debugf("[ MBUND ] Job runner started")
 	stdlib.StoreArgs()
+	if *conf.CDebug {
+		log.Info("BUND core debug is on")
+		tc.SetVariable("tc.Debuglevel", "debug")
+		log.Infof("[ MBUND ] core version: %v", tc.VERSION)
+	} else {
+		log.Debug("BUND core debug is off")
+		tc.SetVariable("tc.Debuglevel", "info")
+		log.Debugf("[ MBUND ] core version: %v", tc.VERSION)
+	}
+	if *conf.CNatsLocal {
+		log.Info("NATS configuration will not be taken from ETCD")
+	} else {
+		log.Debug("ETCD will be probed for NATS configuration")
+	}
 }
