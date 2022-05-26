@@ -78,13 +78,13 @@ var (
 	Agent   		= App.Command("agent", "Run [ MBUND ] Agent")
 
 	Config   		= App.Command("config", "Upload configuration to ETCD")
-	SConf       = Submit.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
+	SConf       = Config.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
+	CShow 			= Config.Flag("show", "Display configuration stored in ETCD").Default("false").Bool()
 
 	Submit   		= App.Command("submit", "Schedule NRBUND script to be executed")
 	SArgs       = Submit.Flag("arg", "Pass positional argument to the script").Strings()
 	SReturn 		= Submit.Flag("return", "HJSON instructions for sending data to New Relic").String()
 	SScript 		= Submit.Arg("script", "BUND URL to the script, submitted to NRBUND for execution").Default("-").String()
-
 
 
 	Sync   			= App.Command("sync", "Send NRBUND SYNC event")

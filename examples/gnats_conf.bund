@@ -1,0 +1,8 @@
+/* Configuring NATS */
+
+local.SetConfig[
+  let[
+    "NATS"
+    "0.0.0.0:4222"
+  ]
+]

@@ -8,12 +8,32 @@ import (
 	"github.com/pieterclaerhout/go-log"
 	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/signal"
+	"github.com/vulogov/monitoringbund/internal/stdlib"
 	"go.etcd.io/etcd/client/v3"
+	"github.com/lrita/cmap"
+	tc "github.com/vulogov/ThreadComputation"
 )
 
-var Etcd *clientv3.Client
-var ApplicationId string
-var ApplicattionType string
+var Etcd 							*clientv3.Client
+var ApplicationId 		string
+var ApplicationType 	string
+var Conf  						cmap.Cmap
+
+func ResetLocalConfig() {
+	log.Debug("Reset local configuration")
+	Conf.Range(func (key, value interface{}) bool {
+		Conf.Delete(key)
+		return true
+	})
+	SetDefaultConfiguration()
+}
+
+func SetDefaultConfiguration() {
+	tc.SetVariable("Name", *conf.Name)
+	tc.SetVariable("Id", *conf.Id)
+	tc.SetVariable("ApplicationId", ApplicationId)
+	tc.SetVariable("ApplicationType", ApplicationType)
+}
 
 func InitEtcdAgent(otype string) {
 	var err error
@@ -37,8 +57,9 @@ func InitEtcdAgent(otype string) {
 		signal.ExitRequest()
 		os.Exit(10)
 	}
-	ApplicattionType = otype
+	ApplicationType = otype
 	SetApplicationId(otype)
+	ResetLocalConfig()
 }
 
 func EtcdSetItem(key string, value string) {
@@ -49,6 +70,50 @@ func EtcdSetItem(key string, value string) {
 		signal.ExitRequest()
 		os.Exit(10)
 	}
+}
+
+func EtcdSetConfItem(key string, value string) {
+	Conf.Store(key, value)
+	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
+	_, err := Etcd.Put(ctx, fmt.Sprintf("MBUND/%s/conf/%s", *conf.Name, key), value)
+	if err != nil {
+		log.Errorf("[ ETCD ] %v", err)
+		signal.ExitRequest()
+		os.Exit(10)
+	}
+}
+
+func EtcdGetConfItems() {
+	ResetLocalConfig()
+	log.Debug("Updating Local config from ETCD")
+	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
+	value, err := Etcd.Get(ctx, fmt.Sprintf("MBUND/%s/conf/", *conf.Name), clientv3.WithPrefix())
+	if err != nil {
+		log.Errorf("[ ETCD ] %v", err)
+		signal.ExitRequest()
+		os.Exit(10)
+	}
+	for _, v := range(value.Kvs) {
+		key := strings.Split(string(v.Key), "/")
+		log.Debugf("[ CONF ] %v = %v", key[len(key)-1], string(v.Value))
+		Conf.Store(key[len(key)-1], v.Value)
+	}
+}
+
+func EtcdReturnConfItems() *map[string]string {
+	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
+	value, err := Etcd.Get(ctx, fmt.Sprintf("MBUND/%s/conf/", *conf.Name), clientv3.WithPrefix())
+	if err != nil {
+		log.Errorf("[ ETCD ] %v", err)
+		signal.ExitRequest()
+		os.Exit(10)
+	}
+	res := make(map[string]string)
+	for _, v := range(value.Kvs) {
+		key := strings.Split(string(v.Key), "/")
+		res[key[len(key)-1]] = string(v.Value)
+	}
+	return &res
 }
 
 func EtcdGetItems()  *map[string]string {
@@ -67,14 +132,32 @@ func EtcdGetItems()  *map[string]string {
 	return &res
 }
 
+func UpdateBundVariablesFromLocalConf(core *stdlib.BUNDEnv) {
+	log.Debugf("Updating BUND environment with Local config")
+	Conf.Range(func (key, value interface{}) bool {
+		switch key.(type) {
+		case string:
+			core.TC.SetVariable(key.(string), value)
+		}
+
+		return true
+	})
+}
+
 func UpdateLocalConfigFromEtcd() {
+	ResetLocalConfig()
 	etcd_cfg := EtcdGetItems()
 	log.Debug("Updating local configuration from ETCD")
 	*conf.Id = (*etcd_cfg)["ID"]
-	SetApplicationId(ApplicattionType)
+	SetApplicationId(ApplicationType)
 	log.Debugf("Application ID is %v", *conf.Id)
 	*conf.Gnats = (*etcd_cfg)["gnats"]
 	log.Debugf("NATS is %v", *conf.Gnats)
+	EtcdGetConfItems()
+	if gnats, ok := Conf.Load("NATS"); ok {
+		log.Debugf("Set NATS server address from CONF/NATS %v", string(gnats.([]byte)))
+		*conf.Gnats = string(gnats.([]byte))
+	}
 }
 
 func UpdateConfigToEtcd() {
@@ -86,6 +169,18 @@ func UpdateConfigToEtcd() {
 		log.Debugf("Update GNATS endpoints with %s", *conf.Gnats)
 		EtcdSetItem("gnats", *conf.Gnats)
 		EtcdSetItem("ID", *conf.Id)
+		log.Debugf("Updating CONF cache")
+		Conf.Range(func (key, value interface{}) bool {
+			switch key.(type) {
+			case string:
+				switch value.(type) {
+				case string:
+					log.Debugf("[ CONF ] Conf/%v=%v", key, value)
+					EtcdSetConfItem(key.(string), value.(string))
+				}
+			}
+			return true
+		})
 	}
 }
 

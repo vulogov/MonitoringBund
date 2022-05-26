@@ -26,6 +26,7 @@ func BundGlobalEvalExpression(code string, args []string, res map[string]interfa
 	if len(args) > 0 {
 		core.TC.EvAttrs.PushFront(AttrsToQueue(args))
 	}
+	UpdateBundVariablesFromLocalConf(core)
 	core.Eval(code)
 	if len(args) > 0 {
 		core.TC.EvAttrs.PopFront()
