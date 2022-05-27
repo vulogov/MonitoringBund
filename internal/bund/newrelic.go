@@ -80,6 +80,15 @@ func SendNewRelicEvent(data *gabs.Container) {
 	NRAPI.Event(host, dst, key, value, attrs)
 }
 
+func SendNewRelicLog(data *gabs.Container) {
+	attrs := TelemetryAttributesToMap(data)
+	host  := data.Search("log", "host").Data().(string)
+	svc   := data.Search("log", "service").Data().(string)
+	lt   	:= data.Search("log", "logtype").Data().(string)
+	msg 	:= data.Search("log", "msg").Data().(string)
+	nrlogapi := NRAPI.LogService(lt, svc, host, attrs)
+	nrlogapi.Send(msg)
+}
 
 func ProcessMetric(m *nats.Msg) {
 	if ! NewRelicConfigured {
@@ -109,6 +118,10 @@ func ProcessMetric(m *nats.Msg) {
 		case "EVENT":
 			if t.(string) == "event" {
 				SendNewRelicEvent(data)
+			}
+		case "LOG":
+			if t.(string) == "log" {
+				SendNewRelicLog(data)
 			}
 		default:
 			log.Debugf("[ NEWRELIC ] Invalid packet %v[%v,%v]", msg.PktId, msg.PktClass, msg.PktKey)

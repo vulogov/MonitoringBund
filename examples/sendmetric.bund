@@ -4,3 +4,4 @@ mbund.Sync["sample"]
 
 42 Metric[let["key" "testkey"]] metric.Send
 42 Event[let["key" "testkey"]] event.Send
+"Hello world!" Log[let["logtype" "testlog"]] log.Send
