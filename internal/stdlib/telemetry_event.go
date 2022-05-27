@@ -10,12 +10,12 @@ import (
 )
 
 
-func BUNDTelemetryMetrics(l *tc.TCExecListener, name string, q *deque.Deque) (interface{}, error) {
+func BUNDTelemetryEvent(l *tc.TCExecListener, name string, q *deque.Deque) (interface{}, error) {
   var err error
   stamp := int64(time.Nanosecond) * time.Now().UnixNano() / int64(time.Millisecond)
   out := gabs.New()
-  out.Set("metric", "type")
-  out.Set(stamp, "metric", "timestamp")
+  out.Set("event", "type")
+  out.Set(stamp, "event", "timestamp")
   out.Set(*conf.ApplicationId, "attributes", "ApplicationId")
   out.Set(*conf.Name, "attributes", "ApplicationName")
   for q.Len() > 0 {
@@ -26,26 +26,26 @@ func BUNDTelemetryMetrics(l *tc.TCExecListener, name string, q *deque.Deque) (in
       case string:
         switch key {
         case "key", "host":
-          out.Set(data.Y, "metric", key)
+          out.Set(data.Y, "event", key)
         default:
           out.Set(data.Y, "attributes", key)
         }
       }
     default:
-      out.Set(data, "metric", "value")
+      out.Set(data, "attributes", "value")
     }
   }
-  if out.Search("metric", "key").Data() == nil {
+  if out.Search("event", "key").Data() == nil {
     key := l.TC.GetContext("key")
     if key == nil {
       return nil, errors.New("Telemetry key not defined")
     }
     switch key.(type) {
     case string:
-      out.Set(key, "metric", "key")
+      out.Set(key, "event", "key")
     }
   }
-  if out.Search("metric", "host").Data() == nil {
+  if out.Search("event", "host").Data() == nil {
     host := l.TC.GetContext("host")
     if host == nil {
       host, err = tc.GetVariable("system.Hostname")
@@ -55,9 +55,9 @@ func BUNDTelemetryMetrics(l *tc.TCExecListener, name string, q *deque.Deque) (in
     }
     switch host.(type) {
     case string:
-      out.Set(host, "metric", "host")
+      out.Set(host, "event", "host")
     default:
-      return nil, errors.New("host attribute for Metric is not a string")
+      return nil, errors.New("host attribute for Event is not a string")
     }
   }
   res := new(tc.TCJson)
@@ -66,5 +66,5 @@ func BUNDTelemetryMetrics(l *tc.TCExecListener, name string, q *deque.Deque) (in
 }
 
 func init() {
-  tc.SetFunction("Metric", BUNDTelemetryMetrics)
+  tc.SetFunction("Event", BUNDTelemetryEvent)
 }
