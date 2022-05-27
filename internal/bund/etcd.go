@@ -191,7 +191,12 @@ func UpdateConfigToEtcd() {
 }
 
 func SetApplicationId(atype string) {
-	ApplicationId = fmt.Sprintf("%s:%s:%s", *conf.Id, *conf.Name, atype)
+	if len(*conf.ApplicationId) > 0 {
+		ApplicationId = *conf.ApplicationId
+	} else {
+		ApplicationId = fmt.Sprintf("%s:%s:%s", *conf.Id, *conf.Name, atype)
+		*conf.ApplicationId = ApplicationId
+	}
 }
 
 func CloseEtcdAgent() {

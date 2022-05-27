@@ -3,6 +3,7 @@ module github.com/vulogov/monitoringbund
 go 1.17
 
 require (
+	github.com/Jeffail/gabs/v2 v2.6.1
 	github.com/bamzi/jobrunner v1.0.0
 	github.com/brianvoe/gofakeit/v6 v6.16.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
@@ -41,7 +42,6 @@ require (
 	github.com/Azure/go-autorest/autorest/date v0.3.0 // indirect
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
-	github.com/Jeffail/gabs/v2 v2.6.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220314183648-97c793e446ba // indirect

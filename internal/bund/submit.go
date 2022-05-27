@@ -18,6 +18,9 @@ func Submit() {
 	InitEtcdAgent("submit")
 	UpdateLocalConfigFromEtcd()
 	InitNatsAgent()
+	if ! WaitSync() {
+		return
+	}
 	log.Debugf("[ MBUND ] bund.Submit(%v) is reached", ApplicationId)
 	script := ""
 	if *conf.SScript == "--" {

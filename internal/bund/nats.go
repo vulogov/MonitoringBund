@@ -101,6 +101,13 @@ func NatsRecv(fun nats.MsgHandler) {
 	Nats.QueueSubscribe(QueueName, *conf.Id, fun)
 }
 
+func NatsTelemetryRecv(fun nats.MsgHandler) {
+	Nats.QueueSubscribe(EvtQueueName, *conf.Id, fun)
+	Nats.QueueSubscribe(MetricQueueName, *conf.Id, fun)
+	Nats.QueueSubscribe(LogQueueName, *conf.Id, fun)
+	Nats.QueueSubscribe(TraceQueueName, *conf.Id, fun)
+}
+
 func NatsRecvSys(fun nats.MsgHandler) {
 	Nats.Subscribe(SysQueueName, fun)
 }

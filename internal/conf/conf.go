@@ -41,7 +41,8 @@ var (
 	App     = kingpin.New("NRBUND", fmt.Sprintf("[ MBUND ] Language that is Functional and Stack-based: %v", BVersion))
 	Name   	= App.Flag("name", "Define cluster name").Required().String()
 	Id      = App.Flag("id", "Unique application ID").Default(uuid.New().String()).String()
-	EvtDst	= App.Flag("event", "Destination for New Relic events").Default("BundApplicationEvent").String()
+	ApplicationId = App.Flag("applicationid", "Unique application ID").String()
+	NoSync  = App.Flag("nosync", "Do not SYNC into cluster").Default("false").Bool()
 	Debug   = App.Flag("debug", "Enable debug mode.").Default("false").Bool()
 	CDebug  = App.Flag("core-debug", "Enable core debug mode.").Default("false").Bool()
 	Color   = App.Flag("color", "--color : Enable colors on terminal --no-color : Disable colors .").Default("true").Bool()
@@ -75,6 +76,7 @@ var (
 	Agitator   	= App.Command("agitator", "Run [ MBUND ] Agitator")
 	UploadConf  = App.Flag("updateconf", "Update etcd configuration from local Agitator configuration").Default("false").Bool()
 	AConf 			= Agitator.Flag("conf", "Configuration file for Agitator scheduler.").Strings()
+	ABConf 			= Agitator.Flag("bund-conf", "BUND configuration for Agitator scheduler.").Strings()
 
 	Agent   		= App.Command("agent", "Run [ MBUND ] Agent")
 
@@ -95,6 +97,7 @@ var (
 	Take   			= App.Command("take", "Take a single scheduled NRBUND script and execute it")
 
 	Watch   		= App.Command("watch", "Watch for NRBUND event on message bus and print them to Stdout")
+	WTele				= Watch.Flag("telemetry", "Watch for telemetry").Default("false").Bool()
 
 	Stop    		= App.Command("stop", "Send 'STOP' signal to a NRBUND bus")
 

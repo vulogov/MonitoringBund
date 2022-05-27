@@ -2,6 +2,7 @@ package bund
 
 import (
 	"time"
+	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/signal"
 	"github.com/pieterclaerhout/go-log"
 )
@@ -23,6 +24,11 @@ func SendSync() {
 
 func WaitSync() bool {
 	log.Debugf("Waiting for SYNC from cluster")
+	if *conf.NoSync {
+		HadSync = true
+		log.Warn("Skipping SYNC with cluster")
+		return true
+	}
 	c := 0
 	for c < 30 {
 		if HadSync {

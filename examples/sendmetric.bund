@@ -1,0 +1,5 @@
+/* Sending sample Metric */
+
+mbund.Sync["sample"] 
+
+42 Metric[let["key" "testkey"]] metric.Send

@@ -19,7 +19,13 @@ func RunFile(core *stdlib.BUNDEnv, name string) {
 
 func Run() {
 	Init()
-	log.Debug("[ MBUND ] bund.Run() is reached")
+	InitEtcdAgent("run")
+	UpdateLocalConfigFromEtcd()
+	InitNatsAgent()
+	if ! WaitSync() {
+		return
+	}
+	log.Debugf("[ MBUND ] bund.Run(%v) is reached", ApplicationId)
 	core := stdlib.InitBUND()
 	for _, f := range *conf.Scripts {
 		RunFile(core, f)

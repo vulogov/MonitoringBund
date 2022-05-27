@@ -1,6 +1,7 @@
 package bund
 
 import (
+	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/nats-io/nats.go"
 	"github.com/pieterclaerhout/go-log"
@@ -24,6 +25,10 @@ func Watch() {
 		return
 	}
 	log.Debugf("[ MBUND ] bund.Watch(%v) is reached", ApplicationId)
-	NatsRecv(WatchDisplay)
+	if ! *conf.WTele {
+		NatsRecv(WatchDisplay)
+	} else {
+		NatsTelemetryRecv(WatchDisplay)
+	}
 	Loop()
 }
