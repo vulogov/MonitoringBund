@@ -1,17 +1,20 @@
 package bund
 
 import (
+	"github.com/pieterclaerhout/go-log"
 	"github.com/gammazero/deque"
+	"github.com/vulogov/monitoringbund/internal/stdlib"
 	tc "github.com/vulogov/ThreadComputation"
 )
 
-func bundSetLocalConfig(v interface{}) interface{} {
+func bundSetLocalConfig(l *tc.TCExecListener, v interface{}) interface{} {
   switch src := v.(type) {
   case *tc.TCPair:
 		switch key := src.X.(type) {
 		case string:
 			switch val := src.Y.(type) {
 			case string:
+				log.Debugf("[ CONF ] Conf.Store(%v, %v)", key, val)
 				Conf.Store(key, val)
 			}
 		}
@@ -20,7 +23,7 @@ func bundSetLocalConfig(v interface{}) interface{} {
 }
 
 func BUNDSetLocalConf(l *tc.TCExecListener, name string, q *deque.Deque) (interface{}, error) {
-	err := l.ExecuteSingleArgumentFunction("localconfigset", q)
+	err := stdlib.ExecuteSingleArgumentFunction(l, "localconfigset", q)
   if err != nil {
     return nil, err
   }
@@ -28,6 +31,6 @@ func BUNDSetLocalConf(l *tc.TCExecListener, name string, q *deque.Deque) (interf
 }
 
 func init() {
-	tc.RegisterFunctionCallback("localconfigset", tc.Pair, bundSetLocalConfig)
+	stdlib.RegisterContextFunctionCallback("localconfigset", tc.Pair, bundSetLocalConfig)
 	tc.SetCommand("local.SetConfig", BUNDSetLocalConf)
 }

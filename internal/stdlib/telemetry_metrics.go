@@ -60,6 +60,18 @@ func BUNDTelemetryMetrics(l *tc.TCExecListener, name string, q *deque.Deque) (in
       return nil, errors.New("host attribute for Metric is not a string")
     }
   }
+  if out.Search("metric", "type").Data() == nil {
+    mtype := l.TC.GetContext("type")
+    if mtype == nil {
+      mtype = "gauge"
+    }
+    switch mtype.(type) {
+    case string:
+      out.Set(mtype, "metric", "type")
+    default:
+      return nil, errors.New("Metric Type attribute for Metric is not a string")
+    }
+  }
   res := new(tc.TCJson)
   res.J = out
   return res, nil

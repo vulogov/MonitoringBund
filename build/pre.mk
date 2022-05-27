@@ -48,5 +48,6 @@ pre:
 	go get -u github.com/hjson/hjson-go
 	go get github.com/nats-io/nats.go/
 	go get github.com/bamzi/jobrunner
+	go get github.com/vulogov/nrapi
 	go get -u github.com/vulogov/ThreadComputation
 	go get github.com/newrelic/go-agent/v3/newrelic

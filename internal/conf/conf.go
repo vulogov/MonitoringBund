@@ -54,6 +54,11 @@ var (
 	ShowResult 	= App.Flag("displayresult", "Display result of [ MBUND ] expression evaluation").Default("false").Bool()
 	JPool   = App.Flag("jobpool", "Pool size for job runner").Default("500").Int()
 	JCon   	= App.Flag("jobconcurrency", "Concurrency for job runner").Default("1").Int()
+
+	NR_account = App.Flag("newrelic_account", "New Relic Account").Envar("NEWRELIC_ACCOUNT").String()
+	NR_api_key = App.Flag("newrelic_api_key", "New Relic API key").Envar("NEWRELIC_API_KEY").String()
+	NR_lic_key = App.Flag("newrelic_lic_key", "New Relic License key").Envar("NEWRELIC_LICENSE_KEY").String()
+
 	Args    = App.Flag("args", "String of arguments passed to a script").String()
 
 
@@ -64,7 +69,7 @@ var (
 	ShowSResult = Shell.Flag("result", "Display result of expressions evaluated in [ MBUND ] shell").Default("false").Short('r').Bool()
 	SExpr 			= Shell.Arg("expression", "[ MBUND ] expression passed to shell.").String()
 
-	Run        	= App.Command("run", "Run NRBUND in non-interactive mode")
+	Run        	= App.Command("run", "Run MBUND in non-interactive mode")
 	Scripts    	= Run.Arg("Scripts", "[ MBUND ] code to load").Strings()
 	ShowRResult = Run.Flag("result", "Display result of scripts execution as it returned by [ MBUND ]").Default("false").Short('r').Bool()
 
@@ -84,6 +89,7 @@ var (
 	CNatsLocal 	= Config.Flag("nats-always-local", "Do not propagate NATS address").Default("false").Bool()
 	SConf       = Config.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
 	CUpdate 		= Config.Flag("update", "Update basic application info").Default("false").Bool()
+	CDelete 		= Config.Flag("delete", "Delete basic application info").Default("false").Bool()
 	CShow 			= Config.Flag("show", "Display configuration stored in ETCD").Default("false").Bool()
 
 	Submit   		= App.Command("submit", "Schedule NRBUND script to be executed")
@@ -100,5 +106,9 @@ var (
 	WTele				= Watch.Flag("telemetry", "Watch for telemetry").Default("false").Bool()
 
 	Stop    		= App.Command("stop", "Send 'STOP' signal to a NRBUND bus")
+
+	NRClient    = App.Command("newrelic_client", "Run MBUND native New Relic client")
+
+	NRQLshell   = App.Command("nrql", "Run MBUND native NRQL shell")
 
 )

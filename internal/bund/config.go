@@ -43,12 +43,18 @@ func DisplayEtcdConfig() {
 
 func Config() {
 	Init()
-	log.Debugf("[ MBUND ] bund.Config(%v) is reached", ApplicationId)
 	InitEtcdAgent("config")
+	log.Debugf("[ MBUND ] bund.Config(%v) is reached", ApplicationId)
 	core := stdlib.InitBUND()
 	for _, n := range(*conf.SConf) {
 		log.Debugf("[ CONF ] Processing %v", n)
 		RunFile(core, n)
+	}
+	if *conf.CDelete {
+		log.Warn("[ ETCD ] Is going to be completely erased...")
+		EtcdDelItems()
+		log.Warn("[ ETCD ] is cleaned")
+		return
 	}
 	if *conf.CUpdate {
 		UpdateConfigToEtcd()

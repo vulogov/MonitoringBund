@@ -60,6 +60,18 @@ func BUNDTelemetryEvent(l *tc.TCExecListener, name string, q *deque.Deque) (inte
       return nil, errors.New("host attribute for Event is not a string")
     }
   }
+  if out.Search("event", "destination").Data() == nil {
+    dst := l.TC.GetContext("destination")
+    if dst == nil {
+      dst = "MBUNDEvent"
+    }
+    switch dst.(type) {
+    case string:
+      out.Set(dst, "event", "destination")
+    default:
+      return nil, errors.New("Destination attribute for Event is not a string")
+    }
+  }
   res := new(tc.TCJson)
   res.J = out
   return res, nil

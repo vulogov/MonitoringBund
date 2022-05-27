@@ -34,6 +34,9 @@ func WaitSync() bool {
 		if HadSync {
 			return true
 		}
+		if signal.ExitRequested() {
+			return false
+		}
 		c += 1
 		SendSync()
 		time.Sleep(1*time.Second)

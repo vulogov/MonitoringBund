@@ -34,6 +34,10 @@ func Main() {
 		Watch()
 	case conf.Stop.FullCommand():
 		Stop()
+	case conf.NRClient.FullCommand():
+		Newrelic_Client()
+	case conf.NRQLshell.FullCommand():
+		Newrelic_NRQL_Shell()
 	}
 	Fin()
 }

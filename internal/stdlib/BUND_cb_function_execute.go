@@ -17,6 +17,7 @@ func ExecuteSingleArgumentFunction(l *tc.TCExecListener, name string, q *deque.D
     case *tc.TCValue:
       fun = GetContextFunctionCallback(name, e.(*tc.TCValue).Value)
     default:
+      log.Debugf("ExecuteSingleArgumentFunction[%T]", e)
       fun = GetContextFunctionCallback(name, e)
     }
     if fun == nil {
@@ -28,7 +29,7 @@ func ExecuteSingleArgumentFunction(l *tc.TCExecListener, name string, q *deque.D
       // Yes, we do not care if execute function returned nothing
       //
       // return l.TC.MakeError(fmt.Sprintf("callback for %v(%T) returned nil", name, e))
-      return nil
+      continue
     }
     log.Debugf("function %v(%T) = %v", name, e, res)
     switch e.(type) {

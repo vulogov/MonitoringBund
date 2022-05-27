@@ -20,7 +20,7 @@ var ApplicationType 	string
 var Conf  						cmap.Cmap
 
 func ResetLocalConfig() {
-	log.Debug("Reset local configuration")
+	log.Debug("Reset local config cache")
 	Conf.Range(func (key, value interface{}) bool {
 		Conf.Delete(key)
 		return true
@@ -59,7 +59,6 @@ func InitEtcdAgent(otype string) {
 	}
 	ApplicationType = otype
 	SetApplicationId(otype)
-	ResetLocalConfig()
 }
 
 func EtcdSetItem(key string, value string) {
@@ -75,7 +74,9 @@ func EtcdSetItem(key string, value string) {
 func EtcdSetConfItem(key string, value string) {
 	Conf.Store(key, value)
 	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
-	_, err := Etcd.Put(ctx, fmt.Sprintf("MBUND/%s/conf/%s", *conf.Name, key), value)
+	_key := fmt.Sprintf("MBUND/%s/conf/%s", *conf.Name, key)
+	log.Debugf("EtcdSetConfItem(%v, %v)", _key, value)
+	_, err := Etcd.Put(ctx, _key, value)
 	if err != nil {
 		log.Errorf("[ ETCD ] %v", err)
 		signal.ExitRequest()
@@ -85,7 +86,7 @@ func EtcdSetConfItem(key string, value string) {
 
 func EtcdGetConfItems() {
 	ResetLocalConfig()
-	log.Debug("Updating Local config from ETCD")
+	log.Debug("Updating Local config cache from ETCD")
 	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
 	value, err := Etcd.Get(ctx, fmt.Sprintf("MBUND/%s/conf/", *conf.Name), clientv3.WithPrefix())
 	if err != nil {
@@ -127,9 +128,22 @@ func EtcdGetItems()  *map[string]string {
 	res := make(map[string]string)
 	for _, v := range(value.Kvs) {
 		key := strings.Split(string(v.Key), "/")
+		if len(key) > 3 {
+			continue
+		}
 		res[key[len(key)-1]] = string(v.Value)
 	}
 	return &res
+}
+
+func EtcdDelItems()   {
+	ctx, _ := context.WithTimeout(context.Background(), *conf.Timeout)
+	_, err := Etcd.Delete(ctx, fmt.Sprintf("MBUND/%s/", *conf.Name), clientv3.WithPrefix())
+	if err != nil {
+		log.Errorf("[ ETCD ] %v", err)
+		signal.ExitRequest()
+		os.Exit(10)
+	}
 }
 
 func UpdateBundVariablesFromLocalConf(core *stdlib.BUNDEnv) {
@@ -148,9 +162,9 @@ func UpdateLocalConfigFromEtcd() {
 	ResetLocalConfig()
 	etcd_cfg := EtcdGetItems()
 	log.Debug("Updating local configuration from ETCD")
-	*conf.Id = (*etcd_cfg)["ID"]
+	*conf.Id = string((*etcd_cfg)["ID"])
 	SetApplicationId(ApplicationType)
-	log.Debugf("Application ID is %v", *conf.Id)
+	log.Debugf("Application ID is %v", *conf.ApplicationId)
 	if ! *conf.CNatsLocal {
 		*conf.Gnats = (*etcd_cfg)["gnats"]
 	}
@@ -191,12 +205,11 @@ func UpdateConfigToEtcd() {
 }
 
 func SetApplicationId(atype string) {
-	if len(*conf.ApplicationId) > 0 {
-		ApplicationId = *conf.ApplicationId
-	} else {
+	if len(*conf.ApplicationId) == 0 {
 		ApplicationId = fmt.Sprintf("%s:%s:%s", *conf.Id, *conf.Name, atype)
 		*conf.ApplicationId = ApplicationId
 	}
+	log.Debugf("[ CONFIG ] SetApplicationId(%v)", ApplicationId)
 }
 
 func CloseEtcdAgent() {

@@ -1,0 +1,16 @@
+/* Configuring New Relic environment */
+
+local.SetConfig[
+  let[
+    "NEWRELIC_ACCOUNT"
+    "{NEWRELIC ACCOUNT}"
+  ]
+  let[
+    "NEWRELIC_API_KEY"
+    "{NEWRELIC API KEY}"
+  ]
+  let[
+    "NEWRELIC_LICENSE_KEY"
+    "{NEWRELIC LICENSE KEY}"
+  ]
+]
