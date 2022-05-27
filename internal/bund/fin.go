@@ -9,6 +9,9 @@ import (
 func Fin() {
 	banner.Banner("[ Zay Gezunt ]")
 	log.Debugf("[ MBUND ] bund.Fin(%v) is reached", ApplicationId)
+	if NewRelicConfigured {
+		NRAPI.Close()
+	}
 	CloseNatsAgent()
 	CloseEtcdAgent()
 	log.Debug("Wait while NR application is shut down")

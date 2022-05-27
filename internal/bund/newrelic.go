@@ -143,9 +143,6 @@ func Newrelic_Client() {
 	log.Debugf("[ MBUND ] bund.Newrelic_Client(%v) is reached", ApplicationId)
 	NatsTelemetryRecv(ProcessMetric)
 	Loop()
-	if NewRelicConfigured {
-		NRAPI.Close()
-	}
 }
 
 func Newrelic_NRQL_Shell() {
@@ -207,9 +204,6 @@ func Newrelic_NRQL_Shell() {
 		} else {
 			log.Debugf("Error reading line: %v", err)
 		}
-	}
-	if NewRelicConfigured {
-		NRAPI.Close()
 	}
 }
 
