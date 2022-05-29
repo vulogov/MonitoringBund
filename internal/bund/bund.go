@@ -38,6 +38,8 @@ func Main() {
 		Newrelic_Client()
 	case conf.NRQLshell.FullCommand():
 		Newrelic_NRQL_Shell()
+	case conf.ZBXClient.FullCommand():
+		Zabbix_Client()
 	}
 	Fin()
 }

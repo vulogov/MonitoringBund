@@ -1,0 +1,24 @@
+/* Configuring Zabbix environment */
+
+local.SetConfig[
+  let[
+    "ZABBIX_ACCOUNT"
+    "Admin"
+  ]
+  let[
+    "ZABBIX_PASSWORD"
+    "zabbix"
+  ]
+  let[
+    "ZABBIX_API"
+    "http://127.0.0.1:8080/zabbix/api_jsonrpc.php"
+  ]
+  let[
+    "ZABBIX_HOST"
+    "127.0.0.1"
+  ]
+  let[
+    "ZABBIX_PORT"
+    "10051"
+  ]
+]

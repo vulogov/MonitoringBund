@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/Jeffail/gabs/v2 v2.6.1
+	github.com/akomic/go-zabbix-proto v0.0.0-20190311101655-318b759684b2
 	github.com/bamzi/jobrunner v1.0.0
 	github.com/brianvoe/gofakeit/v6 v6.16.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
@@ -14,6 +15,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/guptarohit/asciigraph v0.5.5
 	github.com/hjson/hjson-go v3.1.0+incompatible
+	github.com/lestrrat-go/strftime v1.0.6
 	github.com/lrita/cmap v0.0.0-20200818170753-e987cd3dfa73
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 	github.com/nats-io/nats.go v1.15.0

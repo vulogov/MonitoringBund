@@ -59,6 +59,12 @@ var (
 	NR_api_key = App.Flag("newrelic_api_key", "New Relic API key").Envar("NEWRELIC_API_KEY").String()
 	NR_lic_key = App.Flag("newrelic_lic_key", "New Relic License key").Envar("NEWRELIC_LICENSE_KEY").String()
 
+	ZBX_account = App.Flag("zabbix_account", "Zabbix API login name").Envar("ZABBIX_ACCOUNT").String()
+	ZBX_pass		= App.Flag("zabbix_password", "Zabbix API password").Envar("ZABBIX_PASSWORD").String()
+	ZBX_api			= App.Flag("zabbix_api", "Zabbix API endpoint").Envar("ZABBIX_API").String()
+	ZBX_host		= App.Flag("zabbix_host", "Zabbix Server/Proxy host").Envar("ZABBIX_HOST").String()
+	ZBX_port		= App.Flag("zabbix_port", "Zabbix Server/Proxy port").Envar("ZABBIX_PORT").String()
+
 	Args    = App.Flag("args", "String of arguments passed to a script").String()
 
 
@@ -108,6 +114,8 @@ var (
 	Stop    		= App.Command("stop", "Send 'STOP' signal to a NRBUND bus")
 
 	NRClient    = App.Command("newrelic_client", "Run MBUND native New Relic client")
+
+	ZBXClient   = App.Command("zabbix_client", "Run MBUND native Zabbix client")
 
 	NRQLshell   = App.Command("nrql", "Run MBUND native NRQL shell")
 
