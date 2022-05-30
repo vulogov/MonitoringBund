@@ -22,7 +22,13 @@ func InitPrometheusAgent() bool {
 		}
 	}
 
-	if len(*conf.PR_url) > 0  {
+	if len(*conf.PR_api_url) == 0 {
+		if api, ok := Conf.Load("PROMETHEUS_API_URL"); ok {
+			*conf.PR_api_url = string(api.([]uint8))
+		}
+	}
+
+	if len(*conf.PR_url) > 0 && len(*conf.PR_api_url) > 0  {
 		PrometheusConfigured = true
 	}
 	if ! PrometheusConfigured {

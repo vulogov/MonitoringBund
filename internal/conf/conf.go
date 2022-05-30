@@ -65,7 +65,8 @@ var (
 	ZBX_host		= App.Flag("zabbix_host", "Zabbix Server/Proxy host").Envar("ZABBIX_HOST").String()
 	ZBX_port		= App.Flag("zabbix_port", "Zabbix Server/Proxy port").Envar("ZABBIX_PORT").String()
 
-	PR_url  		= App.Flag("prometheus_pusher_ur;", "URL of Prometheus pushgateway").Envar("PROMETHEUS_PUSHER_URL").String()
+	PR_url  		= App.Flag("prometheus_pusher_url", "URL of Prometheus pushgateway").Envar("PROMETHEUS_PUSHER_URL").String()
+	PR_api_url  = App.Flag("prometheus_api_url", "URL of Prometheus API gateway").Envar("PROMETHEUS_API_URL").String()
 
 	Args    = App.Flag("args", "String of arguments passed to a script").String()
 

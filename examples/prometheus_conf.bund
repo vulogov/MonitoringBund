@@ -5,4 +5,8 @@ local.SetConfig[
     "PROMETHEUS_PUSHER_URL"
     "http://localhost:9091/"
   ]
+  let[
+    "PROMETHEUS_API_URL"
+    "http://localhost:9090/"
+  ]
 ]
