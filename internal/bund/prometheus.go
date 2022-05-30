@@ -38,6 +38,7 @@ func SendPrometheusMetric(data *gabs.Container) {
 
 	host  := data.Search("metric", "host").Data().(string)
 	key   := data.Search("metric", "key").Data().(string)
+	// mtype := data.Search("metric", "type").Data().(string)
 	value := data.Search("metric", "value").Data()
 	if value == nil {
 		value = math.NaN()
