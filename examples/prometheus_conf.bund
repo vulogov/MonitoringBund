@@ -1,0 +1,8 @@
+/* Configuring New Relic environment */
+
+local.SetConfig[
+  let[
+    "PROMETHEUS_PUSHER_URL"
+    "http://localhost:9091/"
+  ]
+]

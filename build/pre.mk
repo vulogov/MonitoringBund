@@ -48,6 +48,7 @@ pre:
 	go get -u github.com/hjson/hjson-go
 	go get github.com/nats-io/nats.go/
 	go get github.com/bamzi/jobrunner
+	go get -u github.com/prometheus/client_golang/...
 	go get -u github.com/akomic/go-zabbix-proto/...
 	go get github.com/lestrrat-go/strftime
 	go get github.com/vulogov/nrapi

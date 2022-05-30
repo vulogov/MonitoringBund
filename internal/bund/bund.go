@@ -40,6 +40,8 @@ func Main() {
 		Newrelic_NRQL_Shell()
 	case conf.ZBXClient.FullCommand():
 		Zabbix_Client()
+	case conf.PRClient.FullCommand():
+		Prometheus_Client()
 	}
 	Fin()
 }

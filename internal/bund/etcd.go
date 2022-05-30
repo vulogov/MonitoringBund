@@ -188,7 +188,9 @@ func UpdateConfigToEtcd() {
 		if ! *conf.CNatsLocal {
 			EtcdSetItem("gnats", *conf.Gnats)
 		}
-		EtcdSetItem("ID", *conf.Id)
+		if *conf.CIdUpdated {
+			EtcdSetItem("ID", *conf.Id)
+		}
 		log.Debugf("Updating CONF cache")
 		Conf.Range(func (key, value interface{}) bool {
 			switch key.(type) {

@@ -65,6 +65,8 @@ var (
 	ZBX_host		= App.Flag("zabbix_host", "Zabbix Server/Proxy host").Envar("ZABBIX_HOST").String()
 	ZBX_port		= App.Flag("zabbix_port", "Zabbix Server/Proxy port").Envar("ZABBIX_PORT").String()
 
+	PR_url  		= App.Flag("prometheus_pusher_ur;", "URL of Prometheus pushgateway").Envar("PROMETHEUS_PUSHER_URL").String()
+
 	Args    = App.Flag("args", "String of arguments passed to a script").String()
 
 
@@ -93,6 +95,7 @@ var (
 
 	Config   		= App.Command("config", "Upload configuration to ETCD")
 	CNatsLocal 	= Config.Flag("nats-always-local", "Do not propagate NATS address").Default("false").Bool()
+	CIdUpdated 	= Config.Flag("id-not-updated", "Do not propagate ID").Default("true").Bool()
 	SConf       = Config.Flag("conf", "BUND script that will set the context to be uploaded to ETCD").Strings()
 	CUpdate 		= Config.Flag("update", "Update basic application info").Default("false").Bool()
 	CDelete 		= Config.Flag("delete", "Delete basic application info").Default("false").Bool()
@@ -116,6 +119,8 @@ var (
 	NRClient    = App.Command("newrelic_client", "Run MBUND native New Relic client")
 
 	ZBXClient   = App.Command("zabbix_client", "Run MBUND native Zabbix client")
+
+	PRClient   = App.Command("prometheus_client", "Run MBUND native Prometheus client")
 
 	NRQLshell   = App.Command("nrql", "Run MBUND native NRQL shell")
 
