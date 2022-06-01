@@ -18,6 +18,7 @@ func InitInternalStorage() {
 	Storage, err = tstorage.NewStorage(
 		tstorage.WithWriteTimeout(*conf.Timeout),
 		tstorage.WithRetention(*conf.Retention),
+		tstorage.WithTimestampPrecision(tstorage.Milliseconds),
 	)
 	if err != nil {
 		log.Errorf("Internal storage error: %v", err)

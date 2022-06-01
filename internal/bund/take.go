@@ -32,6 +32,7 @@ func Take() {
 	if ! WaitSync() {
 		return
 	}
+	InitStoragePipe()
 	log.Debugf("[ MBUND ] bund.Take(%v) is reached", ApplicationId)
 	NatsRecv(NRBundExecuteScript)
 	Loop()

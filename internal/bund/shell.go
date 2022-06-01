@@ -26,6 +26,7 @@ func Shell() {
 	InitNatsAgent()
 	banner.PrintBanner(fmt.Sprintf("[ MBUND %v ]", conf.EVersion))
 	log.Info("For exit, type: .exit")
+	InitStoragePipe()
 	log.Debug("[ MBUND ] bund.Shell() is reached")
 	line := liner.NewLiner()
 	defer line.Close()

@@ -7,6 +7,7 @@ import (
 )
 
 func Fin() {
+	signal.ExitRequest()
 	banner.Banner("[ Zay Gezunt ]")
 	log.Debugf("[ MBUND ] bund.Fin(%v) is reached", ApplicationId)
 	if NewRelicConfigured {
@@ -15,6 +16,7 @@ func Fin() {
 	CloseNatsAgent()
 	CloseEtcdAgent()
 	CloseInternalStorage()
+	log.Debug("Waiting for application to quit")
+	signal.Loop()
 	log.Infof("[ MBUND ] %s is down", ApplicationId)
-	signal.ExitRequest()
 }
