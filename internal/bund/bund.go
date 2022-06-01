@@ -42,6 +42,8 @@ func Main() {
 		Zabbix_Client()
 	case conf.PRClient.FullCommand():
 		Prometheus_Client()
+	case conf.Telemetry.FullCommand():
+		Telemetry()
 	}
 	Fin()
 }

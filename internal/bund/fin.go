@@ -14,7 +14,7 @@ func Fin() {
 	}
 	CloseNatsAgent()
 	CloseEtcdAgent()
-	log.Debug("Wait while NR application is shut down")
+	CloseInternalStorage()
 	log.Infof("[ MBUND ] %s is down", ApplicationId)
 	signal.ExitRequest()
 }

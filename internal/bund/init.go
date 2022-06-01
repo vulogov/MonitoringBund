@@ -45,4 +45,5 @@ func Init() {
 	} else {
 		log.Debug("ETCD will be probed for NATS configuration")
 	}
+	InitInternalStorage()
 }

@@ -54,6 +54,9 @@ var (
 	ShowResult 	= App.Flag("displayresult", "Display result of [ MBUND ] expression evaluation").Default("false").Bool()
 	JPool   = App.Flag("jobpool", "Pool size for job runner").Default("500").Int()
 	JCon   	= App.Flag("jobconcurrency", "Concurrency for job runner").Default("1").Int()
+	Catcher = App.Flag("catcher", "Start metric catching to the local metric storage").Default("false").Bool()
+
+	Retention		= App.Flag("retention", "Stored metrics retrention").Default("30m").Duration()
 
 	NR_account = App.Flag("newrelic_account", "New Relic Account").Envar("NEWRELIC_ACCOUNT").String()
 	NR_api_key = App.Flag("newrelic_api_key", "New Relic API key").Envar("NEWRELIC_API_KEY").String()
@@ -124,5 +127,19 @@ var (
 	PRClient   = App.Command("prometheus_client", "Run MBUND native Prometheus client")
 
 	NRQLshell   = App.Command("nrql", "Run MBUND native NRQL shell")
+
+	Telemetry   = App.Command("telemetry", "Submit telemetry to MBUND")
+	TType 			= Telemetry.Flag("type", "Telemetry type").Default("metric").String()
+	THost 			= Telemetry.Flag("host", "Host name for sent telemetry item").Required().String()
+	TKey 				= Telemetry.Flag("key", 	"Telemetry key for sent telemetry item").Required().String()
+	TDst 				= Telemetry.Flag("destination", "Destination for sent event item").String()
+	TMType 			= Telemetry.Flag("metric-type", "Metric type").Default("gauge").String()
+	TLSrv 			= Telemetry.Flag("log-service", "Log service").Default("service").String()
+	TLLt  			= Telemetry.Flag("log-type", "Log type").Default("logfile").String()
+	TValue			= Telemetry.Flag("value", "Telemetry value").Required().String()
+	TArgs 			= Telemetry.Arg("attributes", "Telemetry attributes").StringMap()
+
+
+
 
 )
