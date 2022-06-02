@@ -56,7 +56,7 @@ var (
 	JCon   	= App.Flag("jobconcurrency", "Concurrency for job runner").Default("1").Int()
 	Catcher = App.Flag("catcher", "Start metric catching to the local metric storage").Default("false").Bool()
 
-	Retention		= App.Flag("retention", "Stored metrics retrention").Default("30m").Duration()
+	Retention		= App.Flag("retention", "Stored metrics retrention").Default("8760h").Duration()
 
 	NR_account = App.Flag("newrelic_account", "New Relic Account").Envar("NEWRELIC_ACCOUNT").String()
 	NR_api_key = App.Flag("newrelic_api_key", "New Relic API key").Envar("NEWRELIC_API_KEY").String()

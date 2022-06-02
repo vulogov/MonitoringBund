@@ -25,6 +25,7 @@ func Run() {
 	if ! WaitSync() {
 		return
 	}
+	InitStoragePipe()
 	log.Debugf("[ MBUND ] bund.Run(%v) is reached", ApplicationId)
 	core := stdlib.InitBUND()
 	for _, f := range *conf.Scripts {

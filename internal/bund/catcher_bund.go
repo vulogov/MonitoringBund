@@ -7,6 +7,7 @@ import (
 	"github.com/vulogov/monitoringbund/internal/conf"
 	"github.com/vulogov/monitoringbund/internal/stdlib"
 	"github.com/nakabonne/tstorage"
+	"github.com/pieterclaerhout/go-log"
 	tc "github.com/vulogov/ThreadComputation"
 )
 
@@ -22,6 +23,7 @@ func bundQueryStorage(l *tc.TCExecListener, v interface{}) interface{} {
 				labels := []tstorage.Label{
 					{Name: "host", Value: host},
 				}
+				log.Debugf("metric.Get(%v %v %v %v)", key, labels, stamp2, stamp1)
 				res, err := Storage.Select(key, labels, stamp2, stamp1)
 				if err != nil {
 					l.TC.SetError(fmt.Sprintf("[ STORAGE ]: %v", err))

@@ -1,6 +1,7 @@
 package bund
 
 import (
+	"fmt"
 	"time"
 	"github.com/nats-io/nats.go"
 	"github.com/pieterclaerhout/go-log"
@@ -45,6 +46,7 @@ func StorageCatchingDaemon() {
 			break
 		}
 		for len(StoragePipe) > 0 {
+			log.Debugf("%v", len(StoragePipe))
 			pkt := <- StoragePipe
 	    if pkt == nil {
 	      continue
@@ -71,12 +73,13 @@ func StorageCatchingDaemon() {
 				}
 			}
 			row = append(row, *r)
+			fmt.Println(row)
 			err := Storage.InsertRows(row)
 			if err != nil {
 				log.Errorf("[ CATCHER ] Error storing telemetry: %v", err)
 			}
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(100 * time.Millisecond)
 	}
 	signal.Release(1)
 	log.Debug("Exiting catcher loop")

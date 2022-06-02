@@ -1,0 +1,14 @@
+local[
+  let["host" "testhost"]
+  let["key" "answer"]
+  let["column" "answer.latest"]
+  let["tscolumn" "timestamp"]
+]
+
+"SELECT answer FROM Metric WHERE hostname='testhost' SINCE this quarter"
+  nr.Query
+    metric.Load
+let["testhost" "answer"]
+  metric.Get
+    println
+exit
